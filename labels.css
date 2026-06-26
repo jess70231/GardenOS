@@ -68,7 +68,7 @@ button {
   height: 90mm;
   justify-items: center;
   overflow: hidden;
-  padding: 7mm 5mm 5mm;
+  padding: 6mm 5mm 5mm;
   position: relative;
   width: 60mm;
 }
@@ -85,38 +85,37 @@ button {
 
 .qr-code {
   background: #ffffff;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  height: 42mm;
-  padding: 2mm;
-  width: 42mm;
+  height: 50mm;
+  padding: 0;
+  width: 50mm;
 }
 
 .qr-code img {
   display: block;
   height: 100%;
+  image-rendering: pixelated;
   width: 100%;
 }
 
 .label-text {
   align-self: stretch;
   display: grid;
-  gap: 1.5mm;
+  gap: 1mm;
   grid-template-rows: auto auto 1fr;
-  margin-top: 3mm;
+  margin-top: 2mm;
   text-align: center;
   width: 100%;
 }
 
 .plant-id {
   color: var(--leaf);
-  font-size: 12pt;
+  font-size: 11pt;
   font-weight: 900;
 }
 
 .plant-name {
   color: var(--ink);
-  font-size: 15pt;
+  font-size: 13pt;
   font-weight: 900;
   line-height: 1.05;
   overflow-wrap: anywhere;
@@ -127,12 +126,12 @@ button {
   background: var(--leaf-soft);
   border-radius: 999px;
   color: var(--leaf-dark);
-  font-size: 10pt;
+  font-size: 9pt;
   font-weight: 800;
   line-height: 1.25;
   margin: 1mm auto 0;
   max-width: 100%;
-  padding: 2mm 3mm;
+  padding: 1.5mm 3mm;
 }
 
 .loading {

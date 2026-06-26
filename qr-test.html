@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>QR Test | Plant Catalog</title>
+    <style>
+      body {
+        background: #ffffff;
+        color: #17231b;
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        margin: 0;
+        padding: 24px;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+        margin: 0 0 8px;
+      }
+
+      p {
+        color: #647368;
+        margin: 0 0 20px;
+      }
+
+      .grid {
+        display: grid;
+        gap: 22px;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      }
+
+      .card {
+        border: 1px solid #d9e5dc;
+        border-radius: 8px;
+        padding: 18px;
+        text-align: center;
+      }
+
+      img {
+        display: block;
+        image-rendering: pixelated;
+        margin: 0 auto 12px;
+        max-width: 260px;
+        width: 100%;
+      }
+
+      strong {
+        display: block;
+        font-size: 1.15rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>QR Test</h1>
+    <p>Use this page to test scanning before printing labels.</p>
+    <main id="qrGrid" class="grid"></main>
+    <script>
+      fetch("Plants.csv")
+        .then((response) => response.text())
+        .then((text) => {
+          const lines = text.replace(/^\uFEFF/, "").trim().split(/\r?\n/).slice(1);
+          const grid = document.querySelector("#qrGrid");
+
+          lines.forEach((line) => {
+            const cells = line.split(",");
+            const id = cells[0];
+            const name = cells[1];
+            const variety = cells[2];
+            const card = document.createElement("section");
+            card.className = "card";
+            card.innerHTML = `
+              <img src="QR/${id}.png" alt="QR code for ${id}">
+              <strong>${id}</strong>
+              <span>${name} ${variety}</span>
+            `;
+            grid.append(card);
+          });
+        });
+    </script>
+  </body>
+</html>
