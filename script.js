@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 async function loadPlants() {
-  const response = await fetch(CSV_FILE);
+  const response = await fetch(`${CSV_FILE}?v=${Date.now()}`, { cache: "no-store" });
 
   if (!response.ok) {
     throw new Error("Plants.csv could not be loaded.");
@@ -100,6 +100,9 @@ function normalizePlant(row) {
     englishName: pick(row, ["English Name", "Name"]),
     variety: pick(row, ["Variety"]),
     location: pick(row, ["Location", "Area"]),
+    quantity: pick(row, ["Quantity", "Qty", "Amounts", "Amount"]),
+    plantingDate: pick(row, ["Planting Date", "Planting date", "Plant Date", "Plant date", "Date Planted", "Date planted", "Planted Date", "Planted date"]),
+    purchasePrice: pick(row, ["Purchase Price", "Purchase price", "Price", "Cost"]),
     sun: pick(row, ["Sun"]),
     water: pick(row, ["Water"]),
     fertiliser: pick(row, ["Fertiliser", "Fertilizer"]),
@@ -110,7 +113,12 @@ function normalizePlant(row) {
 }
 
 function pick(row, names) {
-  const key = names.find((name) => Object.prototype.hasOwnProperty.call(row, name));
+  const rowKeys = Object.keys(row);
+  const key = names.find((name) => Object.prototype.hasOwnProperty.call(row, name))
+    || names
+      .map((name) => rowKeys.find((rowKey) => rowKey.toLowerCase() === name.toLowerCase()))
+      .find(Boolean);
+
   return key ? row[key] : "";
 }
 
@@ -172,6 +180,7 @@ function renderPlantGrid(plants, totalPlants) {
         <div class="pill-row">
           <span class="pill">${escapeHtml(plant.id || EMPTY_VALUE)}</span>
           <span class="pill">${escapeHtml(plant.location || EMPTY_VALUE)}</span>
+          <span class="pill">Qty ${escapeHtml(plant.quantity || EMPTY_VALUE)}</span>
         </div>
         <h2>${escapeHtml(displayName(plant))}</h2>
         <p>${escapeHtml(plant.variety || EMPTY_VALUE)}</p>
@@ -206,6 +215,9 @@ function renderDetail(plants) {
         ${detailItem("English Name", plant.englishName)}
         ${detailItem("Variety", plant.variety)}
         ${detailItem("Location", plant.location)}
+        ${detailItem("Quantity", plant.quantity)}
+        ${detailItem("Planting Date", plant.plantingDate)}
+        ${detailItem("Purchase Price", formatPrice(plant.purchasePrice))}
         ${detailItem("Sun", plant.sun)}
         ${detailItem("Water", plant.water)}
         ${detailItem("Fertiliser", plant.fertiliser)}
@@ -233,6 +245,9 @@ function searchableText(plant) {
     plant.englishName,
     plant.variety,
     plant.location,
+    plant.quantity,
+    plant.plantingDate,
+    plant.purchasePrice,
     plant.sun,
     plant.water,
     plant.fertiliser,
@@ -250,6 +265,21 @@ function displayName(plant) {
 
 function photoPath(plant) {
   return `${PHOTO_FOLDER}/${plant.id}.jpeg`;
+}
+
+function formatPrice(value) {
+  if (!value) {
+    return "";
+  }
+
+  const cleanedValue = value.replace(/[$,\s]/g, "");
+  const numberValue = Number(cleanedValue);
+
+  if (!Number.isFinite(numberValue)) {
+    return value;
+  }
+
+  return `$${numberValue.toFixed(2)}`;
 }
 
 function escapeHtml(value) {
