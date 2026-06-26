@@ -1,0 +1,174 @@
+:root {
+  --leaf: #1f6f43;
+  --leaf-dark: #123f2a;
+  --leaf-soft: #e4f3e8;
+  --ink: #17231b;
+  --muted: #647368;
+  --line: #d9e5dc;
+  --paper: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: #f4faf5;
+  color: var(--ink);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  margin: 0;
+}
+
+.print-toolbar {
+  align-items: center;
+  background: var(--leaf-dark);
+  color: #ffffff;
+  display: flex;
+  gap: 18px;
+  justify-content: space-between;
+  padding: 18px clamp(18px, 4vw, 42px);
+}
+
+.print-toolbar h1 {
+  font-size: 1.6rem;
+  margin: 0;
+}
+
+.print-toolbar p {
+  color: #d8f0dd;
+  margin: 4px 0 0;
+}
+
+button {
+  background: #ffffff;
+  border: 0;
+  border-radius: 8px;
+  color: var(--leaf-dark);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 850;
+  padding: 11px 18px;
+}
+
+.label-sheet {
+  display: grid;
+  gap: 4mm;
+  grid-template-columns: repeat(3, 60mm);
+  justify-content: center;
+  padding: 10mm;
+}
+
+.label {
+  align-items: center;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 90mm;
+  justify-items: center;
+  overflow: hidden;
+  padding: 7mm 6mm 6mm;
+  position: relative;
+  width: 60mm;
+}
+
+.label::before {
+  background: var(--leaf);
+  content: "";
+  height: 4mm;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.qr-code {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  height: 35mm;
+  padding: 2mm;
+  width: 35mm;
+}
+
+.qr-code img {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.label-text {
+  align-self: stretch;
+  display: grid;
+  gap: 2mm;
+  grid-template-rows: auto auto 1fr;
+  margin-top: 5mm;
+  text-align: center;
+  width: 100%;
+}
+
+.plant-id {
+  color: var(--leaf);
+  font-size: 12pt;
+  font-weight: 900;
+}
+
+.plant-name {
+  color: var(--ink);
+  font-size: 17pt;
+  font-weight: 900;
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+}
+
+.variety {
+  align-self: start;
+  background: var(--leaf-soft);
+  border-radius: 999px;
+  color: var(--leaf-dark);
+  font-size: 10pt;
+  font-weight: 800;
+  line-height: 1.25;
+  margin: 1mm auto 0;
+  max-width: 100%;
+  padding: 2mm 3mm;
+}
+
+.loading {
+  color: var(--muted);
+  font-weight: 700;
+}
+
+@page {
+  margin: 8mm;
+  size: A4 portrait;
+}
+
+@media print {
+  body {
+    background: #ffffff;
+  }
+
+  .print-toolbar {
+    display: none;
+  }
+
+  .label-sheet {
+    display: grid;
+    gap: 4mm;
+    grid-template-columns: repeat(3, 60mm);
+    justify-content: center;
+    padding: 0;
+  }
+
+  .label {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    break-after: auto;
+    height: 90mm;
+    page-break-after: auto;
+    width: 60mm;
+  }
+}

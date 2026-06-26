@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Printable Plant Labels | Plant Catalog</title>
+    <link rel="stylesheet" href="labels.css">
+  </head>
+  <body>
+    <header class="print-toolbar">
+      <div>
+        <h1>Plant Labels</h1>
+        <p>60 x 90mm labels, one per plant.</p>
+      </div>
+      <button type="button" onclick="window.print()">Print</button>
+    </header>
+
+    <main id="labels" class="label-sheet" aria-live="polite">
+      <p class="loading">Loading labels...</p>
+    </main>
+
+    <script src="labels.js"></script>
+  </body>
+</html>

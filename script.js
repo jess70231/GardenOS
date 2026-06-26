@@ -1,0 +1,277 @@
+const CSV_FILE = "Plants.csv";
+const PHOTO_FOLDER = "photos";
+const EMPTY_VALUE = "Not added yet";
+
+const page = document.body.dataset.page;
+
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const plants = await loadPlants();
+
+    if (page === "home") {
+      renderHome(plants);
+    }
+
+    if (page === "detail") {
+      renderDetail(plants);
+    }
+  } catch (error) {
+    showLoadError(error);
+  }
+});
+
+async function loadPlants() {
+  const response = await fetch(CSV_FILE);
+
+  if (!response.ok) {
+    throw new Error("Plants.csv could not be loaded.");
+  }
+
+  const text = await response.text();
+  return parseCsv(text).map(normalizePlant);
+}
+
+function parseCsv(text) {
+  const rows = [];
+  let row = [];
+  let value = "";
+  let insideQuotes = false;
+
+  const cleanText = text.replace(/^\uFEFF/, "");
+
+  for (let index = 0; index < cleanText.length; index += 1) {
+    const char = cleanText[index];
+    const nextChar = cleanText[index + 1];
+
+    if (char === '"' && insideQuotes && nextChar === '"') {
+      value += '"';
+      index += 1;
+      continue;
+    }
+
+    if (char === '"') {
+      insideQuotes = !insideQuotes;
+      continue;
+    }
+
+    if (char === "," && !insideQuotes) {
+      row.push(value);
+      value = "";
+      continue;
+    }
+
+    if ((char === "\n" || char === "\r") && !insideQuotes) {
+      if (char === "\r" && nextChar === "\n") {
+        index += 1;
+      }
+
+      row.push(value);
+      if (row.some((cell) => cell.trim() !== "")) {
+        rows.push(row);
+      }
+      row = [];
+      value = "";
+      continue;
+    }
+
+    value += char;
+  }
+
+  row.push(value);
+  if (row.some((cell) => cell.trim() !== "")) {
+    rows.push(row);
+  }
+
+  const headers = rows.shift().map((header) => header.trim());
+
+  return rows.map((cells) => {
+    const record = {};
+    headers.forEach((header, index) => {
+      record[header] = (cells[index] || "").trim();
+    });
+    return record;
+  });
+}
+
+function normalizePlant(row) {
+  return {
+    id: pick(row, ["Plant ID", "ID"]),
+    chineseName: pick(row, ["Chinese Name", "Chinese"]),
+    englishName: pick(row, ["English Name", "Name"]),
+    variety: pick(row, ["Variety"]),
+    location: pick(row, ["Location", "Area"]),
+    sun: pick(row, ["Sun"]),
+    water: pick(row, ["Water"]),
+    fertiliser: pick(row, ["Fertiliser", "Fertilizer"]),
+    pruning: pick(row, ["Pruning"]),
+    flowering: pick(row, ["Flowering"]),
+    notes: pick(row, ["Notes"]),
+  };
+}
+
+function pick(row, names) {
+  const key = names.find((name) => Object.prototype.hasOwnProperty.call(row, name));
+  return key ? row[key] : "";
+}
+
+function renderHome(plants) {
+  const searchInput = document.querySelector("#searchInput");
+  const areaFilter = document.querySelector("#areaFilter");
+  const plantCount = document.querySelector("#plantCount");
+
+  plantCount.textContent = plants.length;
+  buildAreaOptions(areaFilter, plants);
+
+  const updateCatalog = () => {
+    const searchTerm = searchInput.value.trim().toLowerCase();
+    const area = areaFilter.value;
+    const filteredPlants = plants.filter((plant) => {
+      const matchesSearch = searchableText(plant).includes(searchTerm);
+      const matchesArea = area === "all" || plant.location === area;
+      return matchesSearch && matchesArea;
+    });
+
+    renderPlantGrid(filteredPlants, plants.length);
+  };
+
+  searchInput.addEventListener("input", updateCatalog);
+  areaFilter.addEventListener("change", updateCatalog);
+  updateCatalog();
+}
+
+function buildAreaOptions(areaFilter, plants) {
+  const areas = [...new Set(plants.map((plant) => plant.location).filter(Boolean))].sort();
+
+  areas.forEach((area) => {
+    const option = document.createElement("option");
+    option.value = area;
+    option.textContent = area;
+    areaFilter.append(option);
+  });
+}
+
+function renderPlantGrid(plants, totalPlants) {
+  const grid = document.querySelector("#plantGrid");
+  const summary = document.querySelector("#resultsSummary");
+
+  summary.textContent = `${plants.length} of ${totalPlants} plants shown`;
+  grid.innerHTML = "";
+
+  if (!plants.length) {
+    grid.innerHTML = `<p class="empty-state">No plants match your search.</p>`;
+    return;
+  }
+
+  plants.forEach((plant) => {
+    const card = document.createElement("a");
+    card.className = "plant-card";
+    card.href = `plant.html?id=${encodeURIComponent(plant.id)}`;
+    card.innerHTML = `
+      <img src="${photoPath(plant)}" alt="${escapeHtml(displayName(plant))}">
+      <div class="card-body">
+        <div class="pill-row">
+          <span class="pill">${escapeHtml(plant.id || EMPTY_VALUE)}</span>
+          <span class="pill">${escapeHtml(plant.location || EMPTY_VALUE)}</span>
+        </div>
+        <h2>${escapeHtml(displayName(plant))}</h2>
+        <p>${escapeHtml(plant.variety || EMPTY_VALUE)}</p>
+      </div>
+    `;
+    grid.append(card);
+  });
+}
+
+function renderDetail(plants) {
+  const detail = document.querySelector("#plantDetail");
+  const plantId = new URLSearchParams(window.location.search).get("id");
+  const plant = plants.find((item) => item.id === plantId);
+
+  if (!plant) {
+    detail.innerHTML = `<p class="empty-state">This plant could not be found. <a href="index.html">Return to the catalog.</a></p>`;
+    return;
+  }
+
+  document.title = `${displayName(plant)} | Plant Catalog`;
+  detail.innerHTML = `
+    <div class="detail-photo">
+      <img src="${photoPath(plant)}" alt="${escapeHtml(displayName(plant))}">
+    </div>
+    <div class="detail-content">
+      <p class="eyebrow">Plant ID ${escapeHtml(plant.id || EMPTY_VALUE)}</p>
+      <h1>${escapeHtml(displayName(plant))}</h1>
+      <p class="detail-meta">${escapeHtml(plant.location || EMPTY_VALUE)}</p>
+      <dl class="details-list">
+        ${detailItem("Plant ID", plant.id)}
+        ${detailItem("Chinese Name", plant.chineseName)}
+        ${detailItem("English Name", plant.englishName)}
+        ${detailItem("Variety", plant.variety)}
+        ${detailItem("Location", plant.location)}
+        ${detailItem("Sun", plant.sun)}
+        ${detailItem("Water", plant.water)}
+        ${detailItem("Fertiliser", plant.fertiliser)}
+        ${detailItem("Pruning", plant.pruning)}
+        ${detailItem("Flowering", plant.flowering)}
+        ${detailItem("Notes", plant.notes)}
+      </dl>
+    </div>
+  `;
+}
+
+function detailItem(label, value) {
+  return `
+    <div class="detail-item">
+      <dt>${escapeHtml(label)}</dt>
+      <dd>${escapeHtml(value || EMPTY_VALUE)}</dd>
+    </div>
+  `;
+}
+
+function searchableText(plant) {
+  return [
+    plant.id,
+    plant.chineseName,
+    plant.englishName,
+    plant.variety,
+    plant.location,
+    plant.sun,
+    plant.water,
+    plant.fertiliser,
+    plant.pruning,
+    plant.flowering,
+    plant.notes,
+  ]
+    .join(" ")
+    .toLowerCase();
+}
+
+function displayName(plant) {
+  return [plant.englishName, plant.variety].filter(Boolean).join(" - ") || plant.id || "Plant";
+}
+
+function photoPath(plant) {
+  return `${PHOTO_FOLDER}/${plant.id}.jpeg`;
+}
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, (char) => {
+    const entities = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;",
+    };
+    return entities[char];
+  });
+}
+
+function showLoadError(error) {
+  const target = page === "home" ? document.querySelector("#plantGrid") : document.querySelector("#plantDetail");
+  const message = error.message || "The plant catalog could not be loaded.";
+
+  target.innerHTML = `
+    <p class="empty-state">
+      ${escapeHtml(message)} If you opened this file by double-clicking, try using the local preview link instead.
+    </p>
+  `;
+}

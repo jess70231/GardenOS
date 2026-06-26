@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Plant Catalog</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body data-page="home">
+    <header class="site-header">
+      <nav class="nav">
+        <a class="brand" href="index.html" aria-label="Plant Catalog home">
+          <span class="brand-mark">PC</span>
+          <span>Plant Catalog</span>
+        </a>
+      </nav>
+
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Garden OS</p>
+          <h1>Plant Catalog</h1>
+          <p class="intro">A clean, searchable home for every plant in your garden.</p>
+        </div>
+        <div class="hero-panel">
+          <span id="plantCount">0</span>
+          <small>plants cataloged</small>
+        </div>
+      </section>
+    </header>
+
+    <main>
+      <section class="toolbar" aria-label="Catalog tools">
+        <label class="field">
+          <span>Search</span>
+          <input id="searchInput" type="search" placeholder="Search by ID, name, variety...">
+        </label>
+
+        <label class="field">
+          <span>Filter by area</span>
+          <select id="areaFilter">
+            <option value="all">All areas</option>
+          </select>
+        </label>
+      </section>
+
+      <section class="results-row">
+        <p id="resultsSummary">Loading plants...</p>
+      </section>
+
+      <section id="plantGrid" class="plant-grid" aria-live="polite"></section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
