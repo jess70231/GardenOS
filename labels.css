@@ -68,7 +68,7 @@ button {
   height: 90mm;
   justify-items: center;
   overflow: hidden;
-  padding: 7mm 6mm 6mm;
+  padding: 7mm 5mm 5mm;
   position: relative;
   width: 60mm;
 }
@@ -87,9 +87,9 @@ button {
   background: #ffffff;
   border: 1px solid var(--line);
   border-radius: 6px;
-  height: 35mm;
+  height: 42mm;
   padding: 2mm;
-  width: 35mm;
+  width: 42mm;
 }
 
 .qr-code img {
@@ -101,9 +101,9 @@ button {
 .label-text {
   align-self: stretch;
   display: grid;
-  gap: 2mm;
+  gap: 1.5mm;
   grid-template-rows: auto auto 1fr;
-  margin-top: 5mm;
+  margin-top: 3mm;
   text-align: center;
   width: 100%;
 }
@@ -116,7 +116,7 @@ button {
 
 .plant-name {
   color: var(--ink);
-  font-size: 17pt;
+  font-size: 15pt;
   font-weight: 900;
   line-height: 1.05;
   overflow-wrap: anywhere;

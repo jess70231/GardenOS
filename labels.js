@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       label.className = "label";
       label.innerHTML = `
         <div class="qr-code">
-          <img src="${QR_FOLDER}/${escapeHtml(plant.id)}.svg" alt="QR code for ${escapeHtml(plant.id)}">
+          <img src="${QR_FOLDER}/${escapeHtml(plant.id)}.png" alt="QR code for ${escapeHtml(plant.id)}">
         </div>
         <div class="label-text">
           <div class="plant-id">${escapeHtml(plant.id)}</div>
