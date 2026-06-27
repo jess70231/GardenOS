@@ -1,0 +1,12 @@
+.DS_Store
+vendor-qrcode/
+assets/
+photos/*.HEIC
+
+# Local Docker helpers are not needed for GitHub Pages.
+.dockerignore
+DOCKER.md
+Dockerfile
+docker-compose.yml
+nginx.conf
+generate_qr.py
