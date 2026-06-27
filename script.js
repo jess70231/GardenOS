@@ -103,6 +103,9 @@ function normalizePlant(row) {
     quantity: pick(row, ["Quantity", "Qty", "Amounts", "Amount"]),
     plantingDate: pick(row, ["Planting Date", "Planting date", "Plant Date", "Plant date", "Date Planted", "Date planted", "Planted Date", "Planted date"]),
     purchasePrice: pick(row, ["Purchase Price", "Purchase price", "Price", "Cost"]),
+    soilMix: pick(row, ["Soil Mix", "Soil mix", "Soil", "Potting Mix", "Potting mix"]),
+    pots: pick(row, ["Pots", "Pot", "Pot Size", "Pot size"]),
+    repottingDates: pick(row, ["Repotting Dates", "Repotting dates", "Repotting Date", "Repotting date", "Repoting Dates", "Repoting dates", "Repoting Date", "Repoting date"]),
     sun: pick(row, ["Sun"]),
     water: pick(row, ["Water"]),
     fertiliser: pick(row, ["Fertiliser", "Fertilizer"]),
@@ -239,6 +242,9 @@ function renderDetail(plants) {
         ${detailItem("Quantity", plant.quantity)}
         ${detailItem("Planting Date", plant.plantingDate)}
         ${detailItem("Purchase Price", formatPrice(plant.purchasePrice))}
+        ${detailItem("Soil Mix", plant.soilMix)}
+        ${detailItem("Pots", plant.pots)}
+        ${detailItem("Repotting Dates", plant.repottingDates)}
       </dl>
     </section>
     <section class="detail-section care-section">
@@ -321,6 +327,9 @@ function searchableText(plant) {
     plant.quantity,
     plant.plantingDate,
     plant.purchasePrice,
+    plant.soilMix,
+    plant.pots,
+    plant.repottingDates,
     plant.sun,
     plant.water,
     plant.fertiliser,

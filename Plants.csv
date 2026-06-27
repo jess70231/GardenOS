@@ -1,8 +1,8 @@
-﻿ID,Name,Variety,Area,Quantity,Planting date,Purchase price
-FS001,Strawberry,Bravo,plant stands,2,Jun-26,$4.95 
-FS002,Strawberry,Fragoo,plant stands,2,27/6/2026,$4.95 
-FS003,Strawberry,Ruby Ann,plant stands,2,23/6/2026,$4.95 
-FS004,Strawberry,Sweetie,plant stands,1,23/6/2026,$4.95 
-FS005,Strawberry,Sweetest,plant stands,2,23/6/2026,$4.95 
-FS006,Strawberry,Pink,plant stands,2,23/6/2026,$4.95 
-FS007,Strawberry,Delizz,plant stands,1,23/6/2026,$4.95 
+﻿ID,Name,Variety,Area,Quantity,Planting date,Purchase price,Soil Mix,Pots,Repotting Dates
+FS001,Strawberry,Bravo,plant stands,2,Jun-26,$4.95,,,
+FS002,Strawberry,Fragoo,plant stands,2,27/6/2026,$4.95,,,
+FS003,Strawberry,Ruby Ann,plant stands,2,23/6/2026,$4.95,,,
+FS004,Strawberry,Sweetie,plant stands,1,23/6/2026,$4.95,,,
+FS005,Strawberry,Sweetest,plant stands,2,23/6/2026,$4.95,,,
+FS006,Strawberry,Pink,plant stands,2,23/6/2026,$4.95,,,
+FS007,Strawberry,Delizz,plant stands,1,23/6/2026,$4.95,,,
