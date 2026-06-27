@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Printable Plant Labels | Plant Catalog</title>
-    <link rel="stylesheet" href="labels.css">
+    <link rel="stylesheet" href="labels.css?v=2">
   </head>
   <body>
     <header class="print-toolbar">
@@ -12,7 +12,10 @@
         <h1>Plant Labels</h1>
         <p>60 x 90mm labels, one per plant.</p>
       </div>
-      <button type="button" onclick="window.print()">Print</button>
+      <div class="toolbar-actions">
+        <a href="index.html">Catalog</a>
+        <button type="button" onclick="window.print()">Print</button>
+      </div>
     </header>
 
     <main id="labels" class="label-sheet" aria-live="polite">

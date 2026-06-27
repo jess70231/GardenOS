@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Plant Catalog</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=4">
   </head>
   <body data-page="home">
     <header class="site-header">
@@ -21,9 +21,19 @@
           <h1>Plant Catalog</h1>
           <p class="intro">A clean, searchable home for every plant in your garden.</p>
         </div>
-        <div class="hero-panel">
-          <span id="plantCount">0</span>
-          <small>plants cataloged</small>
+        <div class="hero-panel" aria-label="Catalog summary">
+          <div class="stat">
+            <span id="plantCount">0</span>
+            <small>plants</small>
+          </div>
+          <div class="stat">
+            <span id="quantityCount">0</span>
+            <small>total quantity</small>
+          </div>
+          <div class="stat">
+            <span id="areaCount">0</span>
+            <small>areas</small>
+          </div>
         </div>
       </section>
     </header>
@@ -50,6 +60,6 @@
       <section id="plantGrid" class="plant-grid" aria-live="polite"></section>
     </main>
 
-    <script src="script.js?v=3"></script>
+    <script src="script.js?v=4"></script>
   </body>
 </html>

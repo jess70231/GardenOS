@@ -126,8 +126,12 @@ function renderHome(plants) {
   const searchInput = document.querySelector("#searchInput");
   const areaFilter = document.querySelector("#areaFilter");
   const plantCount = document.querySelector("#plantCount");
+  const quantityCount = document.querySelector("#quantityCount");
+  const areaCount = document.querySelector("#areaCount");
 
   plantCount.textContent = plants.length;
+  quantityCount.textContent = totalQuantity(plants);
+  areaCount.textContent = uniqueAreas(plants).length;
   buildAreaOptions(areaFilter, plants);
 
   const updateCatalog = () => {
@@ -148,7 +152,7 @@ function renderHome(plants) {
 }
 
 function buildAreaOptions(areaFilter, plants) {
-  const areas = [...new Set(plants.map((plant) => plant.location).filter(Boolean))].sort();
+  const areas = uniqueAreas(plants);
 
   areas.forEach((area) => {
     const option = document.createElement("option");
@@ -175,15 +179,19 @@ function renderPlantGrid(plants, totalPlants) {
     card.className = "plant-card";
     card.href = `plant.html?id=${encodeURIComponent(plant.id)}`;
     card.innerHTML = `
-      <img src="${photoPath(plant)}" alt="${escapeHtml(displayName(plant))}">
+      <div class="card-photo">
+        <img src="${photoPath(plant)}" alt="${escapeHtml(displayName(plant))}">
+      </div>
       <div class="card-body">
         <div class="pill-row">
           <span class="pill">${escapeHtml(plant.id || EMPTY_VALUE)}</span>
-          <span class="pill">${escapeHtml(plant.location || EMPTY_VALUE)}</span>
-          <span class="pill">Qty ${escapeHtml(plant.quantity || EMPTY_VALUE)}</span>
         </div>
         <h2>${escapeHtml(displayName(plant))}</h2>
-        <p>${escapeHtml(plant.variety || EMPTY_VALUE)}</p>
+        <dl class="card-facts">
+          ${smallFact("Area", plant.location)}
+          ${smallFact("Qty", plant.quantity)}
+          ${smallFact("Planted", plant.plantingDate)}
+        </dl>
       </div>
     `;
     grid.append(card);
@@ -202,13 +210,26 @@ function renderDetail(plants) {
 
   document.title = `${displayName(plant)} | Plant Catalog`;
   detail.innerHTML = `
-    <div class="detail-photo">
-      <img src="${photoPath(plant)}" alt="${escapeHtml(displayName(plant))}">
-    </div>
-    <div class="detail-content">
-      <p class="eyebrow">Plant ID ${escapeHtml(plant.id || EMPTY_VALUE)}</p>
-      <h1>${escapeHtml(displayName(plant))}</h1>
-      <p class="detail-meta">${escapeHtml(plant.location || EMPTY_VALUE)}</p>
+    <section class="detail-hero">
+      <div class="detail-photo">
+        <img src="${photoPath(plant)}" alt="${escapeHtml(displayName(plant))}">
+      </div>
+      <div class="detail-intro">
+        <p class="eyebrow">Plant ID ${escapeHtml(plant.id || EMPTY_VALUE)}</p>
+        <h1>${escapeHtml(displayName(plant))}</h1>
+        <p class="detail-meta">${escapeHtml(plant.location || EMPTY_VALUE)}</p>
+        <div class="quick-stats">
+          ${quickStat("Quantity", plant.quantity)}
+          ${quickStat("Planted", plant.plantingDate)}
+          ${quickStat("Price", formatPrice(plant.purchasePrice))}
+        </div>
+      </div>
+    </section>
+    <section class="detail-section">
+      <div>
+        <p class="section-kicker">Plant record</p>
+        <h2>Identity and history</h2>
+      </div>
       <dl class="details-list">
         ${detailItem("Plant ID", plant.id)}
         ${detailItem("Chinese Name", plant.chineseName)}
@@ -218,13 +239,56 @@ function renderDetail(plants) {
         ${detailItem("Quantity", plant.quantity)}
         ${detailItem("Planting Date", plant.plantingDate)}
         ${detailItem("Purchase Price", formatPrice(plant.purchasePrice))}
-        ${detailItem("Sun", plant.sun)}
-        ${detailItem("Water", plant.water)}
-        ${detailItem("Fertiliser", plant.fertiliser)}
-        ${detailItem("Pruning", plant.pruning)}
-        ${detailItem("Flowering", plant.flowering)}
-        ${detailItem("Notes", plant.notes)}
       </dl>
+    </section>
+    <section class="detail-section care-section">
+      <div>
+        <p class="section-kicker">Care profile</p>
+        <h2>How this plant likes to grow</h2>
+      </div>
+      <dl class="care-grid">
+        ${careItem("Sun", plant.sun)}
+        ${careItem("Water", plant.water)}
+        ${careItem("Fertiliser", plant.fertiliser)}
+        ${careItem("Pruning", plant.pruning)}
+        ${careItem("Flowering", plant.flowering)}
+      </dl>
+    </section>
+    <section class="detail-section notes-section">
+      <div>
+        <p class="section-kicker">Notes</p>
+        <h2>Growing observations</h2>
+      </div>
+      <p>${escapeHtml(plant.notes || EMPTY_VALUE)}</p>
+    </section>
+  `;
+}
+
+function uniqueAreas(plants) {
+  return [...new Set(plants.map((plant) => plant.location).filter(Boolean))].sort();
+}
+
+function totalQuantity(plants) {
+  return plants.reduce((sum, plant) => {
+    const quantity = Number(plant.quantity);
+    return Number.isFinite(quantity) ? sum + quantity : sum;
+  }, 0);
+}
+
+function smallFact(label, value) {
+  return `
+    <div>
+      <dt>${escapeHtml(label)}</dt>
+      <dd>${escapeHtml(value || EMPTY_VALUE)}</dd>
+    </div>
+  `;
+}
+
+function quickStat(label, value) {
+  return `
+    <div class="quick-stat">
+      <span>${escapeHtml(value || EMPTY_VALUE)}</span>
+      <small>${escapeHtml(label)}</small>
     </div>
   `;
 }
@@ -232,6 +296,15 @@ function renderDetail(plants) {
 function detailItem(label, value) {
   return `
     <div class="detail-item">
+      <dt>${escapeHtml(label)}</dt>
+      <dd>${escapeHtml(value || EMPTY_VALUE)}</dd>
+    </div>
+  `;
+}
+
+function careItem(label, value) {
+  return `
+    <div class="care-item">
       <dt>${escapeHtml(label)}</dt>
       <dd>${escapeHtml(value || EMPTY_VALUE)}</dd>
     </div>

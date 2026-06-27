@@ -50,6 +50,21 @@ button {
   padding: 11px 18px;
 }
 
+.toolbar-actions {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+}
+
+.toolbar-actions a {
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: 8px;
+  color: #ffffff;
+  font-weight: 850;
+  padding: 10px 14px;
+  text-decoration: none;
+}
+
 .label-sheet {
   display: grid;
   gap: 4mm;
